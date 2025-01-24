@@ -60,8 +60,10 @@ def process_files(search_dir, db_config, api_url, override=False):
             except Exception as e:
                 print(f"Failed to process file '{file_path}': {e}")
                 continue
-
-            save_file_to_postgres(cursor, file_path, file, checksum, file_content_base64)
+            #save the file to DB
+            if not override:
+                save_file_to_postgres(cursor, file_path, file, checksum, file_content_base64)
+            #extrapolate scan results, and save to DB
             yara_matches = [s for s in results.get('debug') if "Matched" in s]
             tab_seperated_yara_matches = "\t".join(yara_matches)
             save_scan_to_postgres(cursor, checksum, tab_seperated_yara_matches, base64.b64encode(results.get('output_text').encode("utf-8")).decode('utf-8'), datetime.now())
