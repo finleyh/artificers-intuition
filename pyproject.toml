@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "hiddenite"
+version = "0.1.0"
+description = "a rare green spodumene"
+authors = ["finleyh <finley.d.hammond@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg2 = "^2.9.10"
+requests = "^2.32.3"
+click = "^8.1.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+hiddenite = "hiddenite.cli:cli"
