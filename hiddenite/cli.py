@@ -8,10 +8,15 @@ def cli():
 
 @cli.command()
 @click.argument("directory", type=click.Path(exists=True))
-def run(directory):
+@click.option('--override', is_flag=True, help="Override and submit all files you find")
+def run(directory, override):
+    """
+    Searches for files in a given directory, processes them.
+    DIRECTORY must be a valid path. Use --override to process and submit all files found and ignore a check against the database.
+    """
     db_config, api_url = load_config()
     print(f"Starting file search in '{directory}'")
-    process_files(directory,db_config,api_url)
+    process_files(directory,db_config,api_url,override)
 
 @cli.command()
 def init():

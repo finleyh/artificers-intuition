@@ -33,7 +33,7 @@ def save_scan_to_postgres(cursor, checksum, yara_matches, parser_output, scanned
 
 
 
-def process_files(search_dir, db_config, api_url):
+def process_files(search_dir, db_config, api_url, override=False):
     print(f"scanning beginning in '{search_dir}'")
     conn = psycopg2.connect(**db_config)
     cursor = conn.cursor()
@@ -43,7 +43,9 @@ def process_files(search_dir, db_config, api_url):
         for file in files:
             file_path = os.path.join(root,file)
             checksum = calculate_sha256(file_path)
-            if is_file_processed(cursor,checksum):
+            if override:
+                pass
+            elif is_file_processed(cursor,checksum):
                 print(f"already processed '{checksum}' at '{file_path}', skipping")
                 continue
             print(f"processing file {file_path}")
