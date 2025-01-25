@@ -24,7 +24,6 @@ def save_file_to_postgres(cursor, file_path, file_name, checksum, file_content_b
     clean_fn = shlex.quote(file_name)
     query=f"INSERT INTO processed_files (file_path, file_name, sha256, file_content_base64, processed_at) VALUES (%s, %s, %s, %s, %s)" 
     cursor.execute(query, (clean_fp,clean_fn,checksum,str(file_content_base64),datetime.now()))
-))
             
 def save_scan_to_postgres(cursor, checksum, yara_matches, parser_output, scanned_at):
     query=f"INSERT INTO scan_results(sha256, yara_matches, parser_output, scanned_at) VALUES (%s, %s, %s, %s)"
