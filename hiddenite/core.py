@@ -66,8 +66,7 @@ def process_files(search_dir, db_config, api_url, override=False):
             save_scan_to_postgres(cursor, checksum, tab_seperated_yara_matches, base64.b64encode(results.get('output_text').encode("utf-8")).decode('utf-8'), datetime.now())
 
             print(f"File '{file}' processed")
-
-    conn.commit()
+            conn.commit()
     cursor.close()
     conn.close()
 
