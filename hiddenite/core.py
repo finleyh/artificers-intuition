@@ -21,7 +21,7 @@ def is_file_processed(cursor, checksum):
 def save_file_to_postgres(cursor, file_path, file_name, checksum, file_content_base64):
     query=f"""
         INSERT INTO processed_files (file_path, file_name, sha256, file_content_base64, processed_at)
-        VALUES ({shlex.quote(file_path)},'{shlex.quote(file_name)}','{checksum}','{str(file_content_base64)}','{datetime.now()}')
+        VALUES ('{shlex.quote(file_path)}','{shlex.quote(file_name)}','{checksum}','{str(file_content_base64)}','{datetime.now()}')
         """
     cursor.execute(query)
             
