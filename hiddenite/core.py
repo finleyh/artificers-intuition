@@ -37,10 +37,11 @@ def process_files(search_dir, db_config, api_url, override=False):
     print(f"scanning beginning in '{search_dir}'")
     conn = psycopg2.connect(**db_config)
     cursor = conn.cursor()
-
+    ignore_extensions = ('.zip', '.tar', '.rar','.gz','.iso')
     for root, directories, files in os.walk(search_dir):
+        filtered_files = [f for f in files if not f.endswith(ignore_extensions)]
         print("scanning root '{root}'")
-        for file in files:
+        for file in filtered_files:
             file_path = os.path.join(root,file)
             checksum = calculate_sha256(file_path)
             if override:
