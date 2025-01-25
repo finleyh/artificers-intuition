@@ -5,6 +5,7 @@ import base64
 import psycopg2
 from datetime import datetime
 import requests
+import shlex
 
 
 def calculate_sha256(file_path):
@@ -39,7 +40,7 @@ def process_files(search_dir, db_config, api_url, override=False):
     cursor = conn.cursor()
     ignore_extensions = ('.zip', '.tar', '.rar','.gz','.iso')
     for root, directories, files in os.walk(search_dir):
-        filtered_files = [f for f in files if not f.endswith(ignore_extensions)]
+        filtered_files = [shlex.quote(f) for f in files if not f.endswith(ignore_extensions)]
         print("scanning root '{root}'")
         for file in filtered_files:
             file_path = os.path.join(root,file)
