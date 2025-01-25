@@ -30,6 +30,7 @@ def save_scan_to_postgres(cursor, checksum, yara_matches, parser_output, scanned
     cursor.execute(query,(checksum, str(yara_matches), str(parser_output), datetime.now()))
 
 def process_files(search_dir, db_config, api_url, override=False):
+    YARA_RULE_PATTERN=r'Matched [a-f0-9]{32}\.bin with ([^\s]+) parser.'
     print(f"scanning beginning in '{search_dir}'")
     conn = psycopg2.connect(**db_config)
     cursor = conn.cursor()
@@ -62,8 +63,9 @@ def process_files(search_dir, db_config, api_url, override=False):
                 save_file_to_postgres(cursor, file_path, file, checksum, file_content_base64)
             #extrapolate scan results, and save to DB
             yara_matches = [s for s in results.get('debug') if "Matched" in s]
-            tab_seperated_yara_matches = "\t".join(yara_matches)
-            save_scan_to_postgres(cursor, checksum, tab_seperated_yara_matches, base64.b64encode(results.get('output_text').encode("utf-8")).decode('utf-8'), datetime.now())
+            yara_rules = [re.search(YARA_RULE_PATTERN, string).group(1) for string in yara_matches if re.search(YARA_RULE_PATTERN, string)]
+            tab_seperated_yara_rules = "\t".join(yara_rules)
+            save_scan_to_postgres(cursor, checksum, tab_seperated_yara_rules, base64.b64encode(results.get('output_text').encode("utf-8")).decode('utf-8'), datetime.now())
 
             print(f"File '{file}' processed")
             conn.commit()
