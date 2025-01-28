@@ -17,6 +17,7 @@ def run(directory, override):
     db_config, api_url = load_config()
     print(f"Starting file search in '{directory}'")
     process_files(directory,db_config,api_url,override)
+    print('dev')
 
 @cli.command()
 def init():
